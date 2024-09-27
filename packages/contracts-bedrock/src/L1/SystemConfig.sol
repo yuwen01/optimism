@@ -22,7 +22,7 @@ import { IResourceMetering } from "src/L1/interfaces/IResourceMetering.sol";
 contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
     /// @notice Enum representing different types of updates.
     /// @custom:value BATCHER               Represents an update to the batcher hash.
-    /// @custom:value FEE_SCALARS           Represents an update to txn fee config on L2.
+    /// @custom:value GAS_CONFIG            Represents an update to txn fee config on L2.
     /// @custom:value GAS_LIMIT             Represents an update to gas limit on L2.
     /// @custom:value UNSAFE_BLOCK_SIGNER   Represents an update to the signer key for unsafe
     ///                                     block distribution.

@@ -604,7 +604,7 @@ contract SystemConfig_Setters_Test is SystemConfig_Init {
         assertEq(systemConfig.unsafeBlockSigner(), newUnsafeSigner);
     }
 
-    /// @dev Tests that `setEip1559Params` updates the eip denominator and elasticity successfully.
+    /// @dev Tests that `setEip1559Params` updates the eip1559 denominator and elasticity successfully.
     function testFuzz_setEip1559Params_succeeds(uint64 _denominator, uint64 _elasticity) external {
         // TODO: use the go FFI interface to encode this.
         uint256 encoded = uint256(uint64(_denominator)) << 64 | uint64(_elasticity);
