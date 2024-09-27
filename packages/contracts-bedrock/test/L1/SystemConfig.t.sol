@@ -133,6 +133,8 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
             _basefeeScalar: basefeeScalar,
             _blobbasefeeScalar: blobbasefeeScalar,
             _batcherHash: bytes32(hex"abcd"),
+            _eip1559Denominator: 1,
+            _eip1559Elasticity: 1,
             _gasLimit: minimumGasLimit - 1,
             _unsafeBlockSigner: address(1),
             _config: Constants.DEFAULT_RESOURCE_CONFIG(),
@@ -163,6 +165,8 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
             _basefeeScalar: basefeeScalar,
             _blobbasefeeScalar: blobbasefeeScalar,
             _batcherHash: bytes32(hex"abcd"),
+            _eip1559Denominator: 1,
+            _eip1559Elasticity: 1,
             _gasLimit: gasLimit,
             _unsafeBlockSigner: address(1),
             _config: Constants.DEFAULT_RESOURCE_CONFIG(),
@@ -194,6 +198,8 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
             _basefeeScalar: basefeeScalar,
             _blobbasefeeScalar: blobbasefeeScalar,
             _batcherHash: bytes32(hex"abcd"),
+            _eip1559Denominator: 1,
+            _eip1559Elasticity: 1,
             _gasLimit: gasLimit,
             _unsafeBlockSigner: address(1),
             _config: Constants.DEFAULT_RESOURCE_CONFIG(),
@@ -289,6 +295,8 @@ contract SystemConfig_Init_ResourceConfig is SystemConfig_Init {
             _basefeeScalar: 0,
             _blobbasefeeScalar: 0,
             _batcherHash: bytes32(0),
+            _eip1559Denominator: 1,
+            _eip1559Elasticity: 1,
             _gasLimit: gasLimit,
             _unsafeBlockSigner: address(0),
             _config: config,
@@ -327,6 +335,8 @@ contract SystemConfig_Init_CustomGasToken is SystemConfig_Init {
             _basefeeScalar: 2100,
             _blobbasefeeScalar: 1000000,
             _batcherHash: bytes32(hex"abcd"),
+            _eip1559Denominator: 250,
+            _eip1559Elasticity: 2,
             _gasLimit: 30_000_000,
             _unsafeBlockSigner: address(1),
             _config: Constants.DEFAULT_RESOURCE_CONFIG(),
@@ -592,5 +602,19 @@ contract SystemConfig_Setters_Test is SystemConfig_Init {
         vm.prank(systemConfig.owner());
         systemConfig.setUnsafeBlockSigner(newUnsafeSigner);
         assertEq(systemConfig.unsafeBlockSigner(), newUnsafeSigner);
+    }
+
+    /// @dev Tests that `setEip1559Params` updates the eip denominator and elasticity successfully.
+    function testFuzz_setEip1559Params_succeeds(uint64 _denominator, uint64 _elasticity) external {
+        // TODO: use the go FFI interface to encode this.
+        uint256 encoded = uint256(uint64(_denominator)) << 64 | uint64(_elasticity);
+
+        vm.expectEmit(address(systemConfig));
+        emit ConfigUpdate(0, ISystemConfig.UpdateType.EIP_1559_PARAMS, abi.encode(encoded));
+
+        vm.prank(systemConfig.owner());
+        systemConfig.setEip1559Params(_denominator, _elasticity);
+        assertEq(systemConfig.eip1559Denominator(), _denominator);
+        assertEq(systemConfig.eip1559Elasticity(), _elasticity);
     }
 }

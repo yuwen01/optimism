@@ -9,7 +9,8 @@ interface ISystemConfig {
         BATCHER,
         GAS_CONFIG,
         GAS_LIMIT,
-        UNSAFE_BLOCK_SIGNER
+        UNSAFE_BLOCK_SIGNER,
+        EIP_1559_PARAMS
     }
 
     struct Addresses {
@@ -41,6 +42,8 @@ interface ISystemConfig {
     function batcherHash() external view returns (bytes32);
     function blobbasefeeScalar() external view returns (uint32);
     function disputeGameFactory() external view returns (address addr_);
+    function eip1559Denominator() external view returns (uint64);
+    function eip1559Elasticity() external view returns (uint64);
     function gasLimit() external view returns (uint64);
     function gasPayingToken() external view returns (address addr_, uint8 decimals_);
     function gasPayingTokenName() external view returns (string memory name_);
@@ -50,6 +53,8 @@ interface ISystemConfig {
         uint32 _basefeeScalar,
         uint32 _blobbasefeeScalar,
         bytes32 _batcherHash,
+        uint64 _eip1559Denominator,
+        uint64 _eip1559Elasticity,
         uint64 _gasLimit,
         address _unsafeBlockSigner,
         IResourceMetering.ResourceConfig memory _config,
@@ -71,6 +76,7 @@ interface ISystemConfig {
     function resourceConfig() external view returns (IResourceMetering.ResourceConfig memory);
     function scalar() external view returns (uint256);
     function setBatcherHash(bytes32 _batcherHash) external;
+    function setEip1559Params(uint64 _denominator, uint64 _elasticity) external;
     function setGasConfig(uint256 _overhead, uint256 _scalar) external;
     function setGasConfigEcotone(uint32 _basefeeScalar, uint32 _blobbasefeeScalar) external;
     function setGasLimit(uint64 _gasLimit) external;
@@ -79,6 +85,5 @@ interface ISystemConfig {
     function transferOwnership(address newOwner) external; // nosemgrep
     function unsafeBlockSigner() external view returns (address addr_);
     function version() external pure returns (string memory);
-
     function __constructor__() external;
 }

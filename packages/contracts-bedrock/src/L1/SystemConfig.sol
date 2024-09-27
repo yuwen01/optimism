@@ -4,6 +4,8 @@ pragma solidity 0.8.15;
 // Contracts
 import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import { FeeVault } from "src/universal/FeeVault.sol";
+import { StaticConfig } from "src/libraries/StaticConfig.sol";
 
 // Libraries
 import { Storage } from "src/libraries/Storage.sol";
@@ -12,7 +14,7 @@ import { GasPayingToken, IGasToken } from "src/libraries/GasPayingToken.sol";
 
 // Interfaces
 import { ISemver } from "src/universal/interfaces/ISemver.sol";
-import { IOptimismPortal } from "src/L1/interfaces/IOptimismPortal.sol";
+import { IOptimismPortal2 as IOptimismPortal } from "src/L1/interfaces/IOptimismPortal2.sol";
 import { IResourceMetering } from "src/L1/interfaces/IResourceMetering.sol";
 
 /// @custom:proxied true
@@ -22,16 +24,18 @@ import { IResourceMetering } from "src/L1/interfaces/IResourceMetering.sol";
 ///         the L2 chain.
 contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
     /// @notice Enum representing different types of updates.
-    /// @custom:value BATCHER              Represents an update to the batcher hash.
-    /// @custom:value GAS_CONFIG           Represents an update to txn fee config on L2.
-    /// @custom:value GAS_LIMIT            Represents an update to gas limit on L2.
-    /// @custom:value UNSAFE_BLOCK_SIGNER  Represents an update to the signer key for unsafe
-    ///                                    block distrubution.
+    /// @custom:value BATCHER               Represents an update to the batcher hash.
+    /// @custom:value FEE_SCALARS           Represents an update to txn fee config on L2.
+    /// @custom:value GAS_LIMIT             Represents an update to gas limit on L2.
+    /// @custom:value UNSAFE_BLOCK_SIGNER   Represents an update to the signer key for unsafe
+    ///                                     block distribution.
+    /// @custom:value EIP_1559_PARAMS       Represents an update to the EIP 1559 params on L2.
     enum UpdateType {
         BATCHER,
         GAS_CONFIG,
         GAS_LIMIT,
-        UNSAFE_BLOCK_SIGNER
+        UNSAFE_BLOCK_SIGNER,
+        EIP_1559_PARAMS
     }
 
     /// @notice Struct representing the addresses of L1 system contracts. These should be the
@@ -118,6 +122,9 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
     /// @notice Blobbasefee scalar value. Part of the L2 fee calculation since the Ecotone network upgrade.
     uint32 public blobbasefeeScalar;
 
+    /// @notice Packed EIP1559 parameters.
+    uint256 public eip1559Params;
+
     /// @notice The configuration for the deposit fee market.
     ///         Used by the OptimismPortal to meter the cost of buying L2 gas on L1.
     ///         Set as internal with a getter so that the struct is returned instead of a tuple.
@@ -147,6 +154,8 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
             _basefeeScalar: 0,
             _blobbasefeeScalar: 0,
             _batcherHash: bytes32(0),
+            _eip1559Denominator: 1,
+            _eip1559Elasticity: 1,
             _gasLimit: 1,
             _unsafeBlockSigner: address(0),
             _config: IResourceMetering.ResourceConfig({
@@ -176,6 +185,8 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
     /// @param _basefeeScalar     Initial basefee scalar value.
     /// @param _blobbasefeeScalar Initial blobbasefee scalar value.
     /// @param _batcherHash       Initial batcher hash.
+    /// @param _eip1559Denominator       Initial EIP 1559 denominator.
+    /// @param _eip1559Elasticity        Initial EIP 1559 elasticity.
     /// @param _gasLimit          Initial gas limit.
     /// @param _unsafeBlockSigner Initial unsafe block signer address.
     /// @param _config            Initial ResourceConfig.
@@ -187,6 +198,8 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
         uint32 _basefeeScalar,
         uint32 _blobbasefeeScalar,
         bytes32 _batcherHash,
+        uint64 _eip1559Denominator,
+        uint64 _eip1559Elasticity,
         uint64 _gasLimit,
         address _unsafeBlockSigner,
         IResourceMetering.ResourceConfig memory _config,
@@ -203,6 +216,7 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
         _setBatcherHash(_batcherHash);
         _setGasConfigEcotone({ _basefeeScalar: _basefeeScalar, _blobbasefeeScalar: _blobbasefeeScalar });
         _setGasLimit(_gasLimit);
+        _setEip1559Params(_eip1559Denominator, _eip1559Elasticity);
 
         Storage.setAddress(UNSAFE_BLOCK_SIGNER_SLOT, _unsafeBlockSigner);
         Storage.setAddress(BATCH_INBOX_SLOT, _batchInbox);
@@ -308,6 +322,17 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
         symbol_ = GasPayingToken.getSymbol();
     }
 
+    /// @notice Getter for the EIP 1559 denominator
+    function eip1559Denominator() external view returns (uint64) {
+        return uint64(eip1559Params >> 64);
+    }
+
+    /// @notice Getter for the EIP 1559 denominator
+    function eip1559Elasticity() external view returns (uint64) {
+        uint256 mask = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000000000000000FFFFFFFFFFFFFFFF;
+        return uint64(eip1559Params & mask);
+    }
+
     /// @notice Internal setter for the gas paying token address, includes validation.
     ///         The token must not already be set and must be non zero and not the ether address
     ///         to set the token address. This prevents the token address from being changed
@@ -401,6 +426,23 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
 
         bytes memory data = abi.encode(overhead, scalar);
         emit ConfigUpdate(VERSION, UpdateType.GAS_CONFIG, data);
+    }
+
+    /// @notice Updates EIP 1559 Params as of the Holocene upgrade. Can only be called by the owner.
+    /// @param _denominator     New EIP 1559 denominator value.
+    /// @param _elasticity    New EIP 1559 elasticity value.
+    function setEip1559Params(uint64 _denominator, uint64 _elasticity) external onlyOwner {
+        _setEip1559Params(_denominator, _elasticity);
+    }
+
+    /// @notice Internal function for updating the EIP 1559 Params as of the Holocene upgrade.
+    /// @param _denominator     New EIP 1559 denominator value.
+    /// @param _elasticity    New EIP 1559 elasticity value.
+    function _setEip1559Params(uint64 _denominator, uint64 _elasticity)internal {
+        eip1559Params = (uint256(_denominator) << 64) | _elasticity;
+
+        bytes memory data = abi.encode(eip1559Params);
+        emit ConfigUpdate(VERSION, UpdateType.EIP_1559_PARAMS, data);
     }
 
     /// @notice Updates the L2 gas limit. Can only be called by the owner.
