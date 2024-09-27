@@ -117,6 +117,8 @@ contract SystemConfigInterop_Test is CommonTest {
             _basefeeScalar: 2100,
             _blobbasefeeScalar: 1000000,
             _batcherHash: bytes32(hex"abcd"),
+            _eip1559Denominator: 250,
+            _eip1559Elasticity: 2,
             _gasLimit: 30_000_000,
             _unsafeBlockSigner: address(1),
             _config: Constants.DEFAULT_RESOURCE_CONFIG(),

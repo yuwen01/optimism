@@ -4,9 +4,6 @@ pragma solidity 0.8.15;
 // Contracts
 import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import { FeeVault } from "src/universal/FeeVault.sol";
-import { StaticConfig } from "src/libraries/StaticConfig.sol";
-
 // Libraries
 import { Storage } from "src/libraries/Storage.sol";
 import { Constants } from "src/libraries/Constants.sol";
@@ -14,7 +11,7 @@ import { GasPayingToken, IGasToken } from "src/libraries/GasPayingToken.sol";
 
 // Interfaces
 import { ISemver } from "src/universal/interfaces/ISemver.sol";
-import { IOptimismPortal2 as IOptimismPortal } from "src/L1/interfaces/IOptimismPortal2.sol";
+import { IOptimismPortal as IOptimismPortal } from "src/L1/interfaces/IOptimismPortal.sol";
 import { IResourceMetering } from "src/L1/interfaces/IResourceMetering.sol";
 
 /// @custom:proxied true

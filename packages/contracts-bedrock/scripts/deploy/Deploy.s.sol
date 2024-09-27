@@ -1207,6 +1207,8 @@ contract Deploy is Deployer {
                     cfg.basefeeScalar(),
                     cfg.blobbasefeeScalar(),
                     batcherHash,
+                    uint64(cfg.eip1559Denominator()),
+                    uint64(cfg.eip1559Elasticity()),
                     uint64(cfg.l2GenesisBlockGasLimit()),
                     cfg.p2pSequencerAddress(),
                     Constants.DEFAULT_RESOURCE_CONFIG(),
