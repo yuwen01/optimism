@@ -11,7 +11,7 @@ import { GasPayingToken, IGasToken } from "src/libraries/GasPayingToken.sol";
 
 // Interfaces
 import { ISemver } from "src/universal/interfaces/ISemver.sol";
-import { IOptimismPortal as IOptimismPortal } from "src/L1/interfaces/IOptimismPortal.sol";
+import { IOptimismPortal } from "src/L1/interfaces/IOptimismPortal.sol";
 import { IResourceMetering } from "src/L1/interfaces/IResourceMetering.sol";
 
 /// @custom:proxied true
