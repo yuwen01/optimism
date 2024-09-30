@@ -1058,7 +1058,7 @@ jobs:
           key: cannon-prestate-{{ checksum "./cannon/bin/cannon" }}-{{ checksum "op-program/bin/op-program-client.elf" }}
           name: Save Cannon prestate to cache
           paths:
-            - "op-program/bin/prestate.json"
+            - "op-program/bin/prestate.bin.gz"
             - "op-program/bin/meta.json"
             - "op-program/bin/prestate-proof.json"
       - run:
@@ -1079,7 +1079,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - "op-program/bin/prestate.json"
+            - "op-program/bin/prestate.bin.gz"
             - "op-program/bin/meta.json"
             - "op-program/bin/prestate-proof.json"
 
@@ -1171,6 +1171,8 @@ jobs:
           key: golang-build-cache-cannon-stf-verify-{{ checksum "go.sum" }}
           paths:
             - "/root/.cache/go-build"
+      - notify-failures-on-develop:
+          mentions: "@proofs-squad"
 
   semgrep-scan:
     parameters:
@@ -1458,6 +1460,9 @@ workflows:
                 - op-program
                 - op-service
                 - op-supervisor
+      - go-test:
+          name: semver-natspec-tests
+          module: packages/contracts-bedrock/scripts/checks/semver-natspec
       - go-test-kurtosis:
           name: op-chain-ops-integration
           module: op-chain-ops
@@ -1674,7 +1679,7 @@ workflows:
 
   scheduled-fpp:
     when:
-      equal: [ build_four_hours, <<pipeline.schedule.name>> ]
+      equal: [ build_hourly, <<pipeline.schedule.name>> ]
     jobs:
       - fpp-verify:
           context:
@@ -1705,6 +1710,8 @@ workflows:
       - cannon-stf-verify:
           requires:
             - go-mod-download
+          context:
+            - slack
       - contracts-bedrock-build:
           skip_pattern: test
           context:
@@ -1722,7 +1729,6 @@ workflows:
           requires:
             - contracts-bedrock-build
             - cannon-prestate
-            - cannon-stf-verify
           context:
             - slack
 
