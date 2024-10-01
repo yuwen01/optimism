@@ -161,7 +161,7 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
         Storage.setUint(START_BLOCK_SLOT, type(uint256).max);
         initialize({
             _owner: address(0xdEaD),
-            _scalars: L1FeeScalars({
+            _l1FeeScalars: L1FeeScalars({
                 basefeeScalar: 0,
                 blobbasefeeScalar: 0
             }),
@@ -185,6 +185,10 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
                 optimismPortal: address(0),
                 optimismMintableERC20Factory: address(0),
                 gasPayingToken: address(0)
+            }),
+            _eip1559Params: EIP1559Params({
+                denominator: 250,
+                elasticity: 100
             })
         });
     }
@@ -192,8 +196,7 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
     /// @notice Initializer.
     ///         The resource config must be set before the require check.
     /// @param _owner             Initial owner of the contract.
-    /// @param _basefeeScalar     Initial basefee scalar value.
-    /// @param _blobbasefeeScalar Initial blobbasefee scalar value.
+    /// @param _l1FeeScalars      Initial L1 fee scalars.
     /// @param _batcherHash       Initial batcher hash.
     /// @param _gasLimit          Initial gas limit.
     /// @param _unsafeBlockSigner Initial unsafe block signer address.
@@ -204,15 +207,14 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
     /// @param _eip1559Params       Initial EIP 1559 params. YUWENTODO: how are they packed?
     function initialize(
         address _owner,
-        uint32 _basefeeScalar,
-        uint32 _blobbasefeeScalar,
+        L1FeeScalars memory _l1FeeScalars,
         bytes32 _batcherHash,
         uint64 _gasLimit,
         address _unsafeBlockSigner,
         IResourceMetering.ResourceConfig memory _config,
         address _batchInbox,
         SystemConfig.Addresses memory _addresses,
-        uint128 _eip1559Params
+        EIP1559Params memory _eip1559Params
     )
         public
         initializer
@@ -222,9 +224,9 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
 
         // These are set in ascending order of their UpdateTypes.
         _setBatcherHash(_batcherHash);
-        _setGasConfigEcotone({ _basefeeScalar: _basefeeScalar, _blobbasefeeScalar: _blobbasefeeScalar });
+        _setGasConfigEcotone({ _basefeeScalar: _l1FeeScalars.basefeeScalar, _blobbasefeeScalar: _l1FeeScalars.blobbasefeeScalar });
         _setGasLimit(_gasLimit);
-        _setEip1559Params(_eip1559Params);
+        _setEip1559Params(_eip1559Params.denominator, _eip1559Params.elasticity);
 
         Storage.setAddress(UNSAFE_BLOCK_SIGNER_SLOT, _unsafeBlockSigner);
         Storage.setAddress(BATCH_INBOX_SLOT, _batchInbox);
@@ -337,8 +339,7 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
 
     /// @notice Getter for the EIP 1559 denominator
     function eip1559Elasticity() external view returns (uint64) {
-        uint256 mask = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000000000000000FFFFFFFFFFFFFFFF;
-        return uint64(eip1559Params & mask);
+        return uint64(eip1559Params);
     }
 
     /// @notice Internal setter for the gas paying token address, includes validation.
@@ -439,16 +440,15 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
     // / @notice Updates EIP 1559 Params as of the Holocene upgrade. Can only be called by the owner.
     // / @param _denominator     New EIP 1559 denominator value.
     // / @param _elasticity    New EIP 1559 elasticity value. YUWENTODO fix this
-    function setEip1559Params(uint128 _eip1559Params) external onlyOwner {
-        _setEip1559Params(_eip1559Params);
+    function setEip1559Params(uint64 _denominator, uint64 _elasticity) external onlyOwner {
+        _setEip1559Params(_denominator, _elasticity);
     }
 
     // / @notice Internal function for updating the EIP 1559 Params as of the Holocene upgrade.
     // / @param _denominator     New EIP 1559 denominator value.
     // / @param _elasticity    New EIP 1559 elasticity value. YUWENTODO fix this
-    function _setEip1559Params(uint128 _eip1559Params) internal {
-        // eip1559Params = (uint256(_denominator) << 64) | _elasticity;
-        eip1559Params = _eip1559Params;
+    function _setEip1559Params(uint64 _denominator, uint64 _elasticity) internal {
+        eip1559Params = (uint256(_denominator) << 64) | _elasticity;
         bytes memory data = abi.encode(eip1559Params);
         emit ConfigUpdate(VERSION, UpdateType.EIP_1559_PARAMS, data);
     }

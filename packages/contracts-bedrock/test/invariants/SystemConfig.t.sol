@@ -21,8 +21,10 @@ contract SystemConfig_GasLimitBoundaries_Invariant is Test {
                 configImpl.initialize,
                 (
                     address(0xbeef), // owner
-                    2100, // overhead
-                    1000000, // scalar
+                    ISystemConfig.L1FeeScalars({ // L1 Fee Scalars
+                        basefeeScalar: 2100,
+                        blobbasefeeScalar: 1000000
+                    }),
                     bytes32(hex"abcd"), // batcher hash
                     30_000_000, // gas limit
                     address(1), // unsafe block signer
@@ -37,7 +39,10 @@ contract SystemConfig_GasLimitBoundaries_Invariant is Test {
                         optimismMintableERC20Factory: address(0),
                         gasPayingToken: Constants.ETHER
                     }),
-                    250 // eip1559 params YUWENTODO pack this
+                    ISystemConfig.EIP1559Params({ // eip1559 params
+                        denominator: 250,
+                        elasticity: 250
+                    })
                 )
             )
         );

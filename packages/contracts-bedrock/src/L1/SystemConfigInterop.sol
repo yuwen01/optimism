@@ -29,8 +29,7 @@ contract SystemConfigInterop is SystemConfig {
 
     /// @notice Initializer.
     /// @param _owner             Initial owner of the contract.
-    /// @param _basefeeScalar     Initial basefee scalar value.
-    /// @param _blobbasefeeScalar Initial blobbasefee scalar value.
+    /// @param _l1FeeScalars      Initial L1 fee scalars.
     /// @param _batcherHash       Initial batcher hash.
     /// @param _gasLimit          Initial gas limit.
     /// @param _unsafeBlockSigner Initial unsafe block signer address.
@@ -39,26 +38,25 @@ contract SystemConfigInterop is SystemConfig {
     ///                           canonical data.
     /// @param _addresses         Set of L1 contract addresses. These should be the proxies.
     /// @param _dependencyManager The addressed allowed to add/remove from the dependency set
+    /// @param _eip1559Params    EIP1559 params
     function initialize(
         address _owner,
-        uint32 _basefeeScalar,
-        uint32 _blobbasefeeScalar,
+        L1FeeScalars memory _l1FeeScalars,
         bytes32 _batcherHash,
-        uint128 _eip1559Params,
         uint64 _gasLimit,
         address _unsafeBlockSigner,
         IResourceMetering.ResourceConfig memory _config,
         address _batchInbox,
         SystemConfig.Addresses memory _addresses,
-        address _dependencyManager
+        address _dependencyManager,
+        EIP1559Params memory _eip1559Params
     )
         external
     {
         // This method has an initializer modifier, and will revert if already initialized.
         initialize({
             _owner: _owner,
-            _basefeeScalar: _basefeeScalar,
-            _blobbasefeeScalar: _blobbasefeeScalar,
+            _l1FeeScalars: _l1FeeScalars,
             _batcherHash: _batcherHash,
             _gasLimit: _gasLimit,
             _unsafeBlockSigner: _unsafeBlockSigner,

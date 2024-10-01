@@ -130,8 +130,10 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
         vm.expectRevert("SystemConfig: gas limit too low");
         systemConfig.initialize({
             _owner: alice,
-            _basefeeScalar: basefeeScalar,
-            _blobbasefeeScalar: blobbasefeeScalar,
+            _l1FeeScalars: ISystemConfig.L1FeeScalars({
+                basefeeScalar: basefeeScalar,
+                blobbasefeeScalar: blobbasefeeScalar
+            }),
             _batcherHash: bytes32(hex"abcd"),
             _gasLimit: minimumGasLimit - 1,
             _unsafeBlockSigner: address(1),
@@ -146,7 +148,10 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
                 optimismMintableERC20Factory: address(0),
                 gasPayingToken: Constants.ETHER
             }),
-            _eip1559Params: 1
+            _eip1559Params: ISystemConfig.EIP1559Params({
+                denominator: 250,
+                elasticity: 100
+            })
         });
     }
 
@@ -161,8 +166,10 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
         vm.prank(systemConfig.owner());
         systemConfig.initialize({
             _owner: alice,
-            _basefeeScalar: basefeeScalar,
-            _blobbasefeeScalar: blobbasefeeScalar,
+            _l1FeeScalars: ISystemConfig.L1FeeScalars({
+                basefeeScalar: 2100,
+                blobbasefeeScalar: 1000000
+            }),
             _batcherHash: bytes32(hex"abcd"),
             _gasLimit: gasLimit,
             _unsafeBlockSigner: address(1),
@@ -177,7 +184,10 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
                 optimismMintableERC20Factory: address(0),
                 gasPayingToken: Constants.ETHER
             }),
-            _eip1559Params: 1
+            _eip1559Params: ISystemConfig.EIP1559Params({
+                denominator: 250,
+                elasticity: 100
+            })
         });
         assertEq(systemConfig.startBlock(), block.number);
     }
@@ -193,8 +203,10 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
         vm.prank(systemConfig.owner());
         systemConfig.initialize({
             _owner: alice,
-            _basefeeScalar: basefeeScalar,
-            _blobbasefeeScalar: blobbasefeeScalar,
+            _l1FeeScalars: ISystemConfig.L1FeeScalars({
+                basefeeScalar: 2100,
+                blobbasefeeScalar: 1000000
+            }),
             _batcherHash: bytes32(hex"abcd"),
             _gasLimit: gasLimit,
             _unsafeBlockSigner: address(1),
@@ -209,7 +221,10 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
                 optimismMintableERC20Factory: address(0),
                 gasPayingToken: Constants.ETHER
             }),
-            _eip1559Params: 1
+            _eip1559Params: ISystemConfig.EIP1559Params({
+                denominator: 250,
+                elasticity: 100
+            })
         });
         assertEq(systemConfig.startBlock(), 1);
     }
@@ -289,8 +304,10 @@ contract SystemConfig_Init_ResourceConfig is SystemConfig_Init {
         vm.expectRevert(bytes(revertMessage));
         systemConfig.initialize({
             _owner: address(0xdEaD),
-            _basefeeScalar: 0,
-            _blobbasefeeScalar: 0,
+            _l1FeeScalars: ISystemConfig.L1FeeScalars({
+                basefeeScalar: 0,
+                blobbasefeeScalar: 0
+            }),
             _batcherHash: bytes32(0),
             _gasLimit: gasLimit,
             _unsafeBlockSigner: address(0),
@@ -305,7 +322,10 @@ contract SystemConfig_Init_ResourceConfig is SystemConfig_Init {
                 optimismMintableERC20Factory: address(0),
                 gasPayingToken: address(0)
             }),
-            _eip1559Params: 1
+            _eip1559Params: ISystemConfig.EIP1559Params({
+                denominator: 250,
+                elasticity: 100
+            })
         });
     }
 }
@@ -328,8 +348,10 @@ contract SystemConfig_Init_CustomGasToken is SystemConfig_Init {
 
         systemConfig.initialize({
             _owner: alice,
-            _basefeeScalar: 2100,
-            _blobbasefeeScalar: 1000000,
+            _l1FeeScalars: ISystemConfig.L1FeeScalars({
+                basefeeScalar: 2100,
+                blobbasefeeScalar: 1000000
+            }),
             _batcherHash: bytes32(hex"abcd"),
             _gasLimit: 30_000_000,
             _unsafeBlockSigner: address(1),
@@ -344,7 +366,10 @@ contract SystemConfig_Init_CustomGasToken is SystemConfig_Init {
                 optimismMintableERC20Factory: address(0),
                 gasPayingToken: _gasPayingToken
             }),
-            _eip1559Params: 250
+            _eip1559Params: ISystemConfig.EIP1559Params({
+                denominator: 250,
+                elasticity: 100
+            })
         });
     }
 
@@ -602,7 +627,7 @@ contract SystemConfig_Setters_Test is SystemConfig_Init {
     /// @dev Tests that `setEip1559Params` updates the eip1559 denominator and elasticity successfully.
     function testFuzz_setEip1559Params_succeeds(uint64 _denominator, uint64 _elasticity) external {
         // TODO: use the go FFI interface to encode this.
-        uint256 encoded = uint256(uint64(_denominator)) << 64 | uint64(_elasticity);
+        uint256 encoded = uint256(uint256(_denominator) << 64 | _elasticity);
 
         vm.expectEmit(address(systemConfig));
         emit ConfigUpdate(0, ISystemConfig.UpdateType.EIP_1559_PARAMS, abi.encode(encoded));

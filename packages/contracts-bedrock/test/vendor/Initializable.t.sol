@@ -178,8 +178,10 @@ contract Initializer_Test is Bridge_Initializer {
                     systemConfig.initialize,
                     (
                         address(0xdead),
-                        0,
-                        0,
+                        ISystemConfig.L1FeeScalars({
+                            basefeeScalar: 0,
+                            blobbasefeeScalar: 0
+                        }),
                         bytes32(0),
                         1,
                         address(0),
@@ -201,7 +203,10 @@ contract Initializer_Test is Bridge_Initializer {
                             optimismMintableERC20Factory: address(0),
                             gasPayingToken: Constants.ETHER
                         }),
-                        1
+                        ISystemConfig.EIP1559Params({
+                            denominator: 250,
+                            elasticity: 100
+                        })
                     )
                 )
             })
@@ -215,8 +220,10 @@ contract Initializer_Test is Bridge_Initializer {
                     systemConfig.initialize,
                     (
                         address(0xdead),
-                        0,
-                        0,
+                        ISystemConfig.L1FeeScalars({
+                            basefeeScalar: 0,
+                            blobbasefeeScalar: 0
+                        }),
                         bytes32(0),
                         1,
                         address(0),
@@ -238,7 +245,10 @@ contract Initializer_Test is Bridge_Initializer {
                             optimismMintableERC20Factory: address(0),
                             gasPayingToken: Constants.ETHER
                         }),
-                        1
+                        ISystemConfig.EIP1559Params({
+                            denominator: 250,
+                            elasticity: 100
+                        })
                     )
                 )
             })

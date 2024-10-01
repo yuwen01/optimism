@@ -1083,8 +1083,10 @@ contract Deploy is Deployer {
                 ISystemConfig.initialize,
                 (
                     cfg.finalSystemOwner(),
-                    cfg.basefeeScalar(),
-                    cfg.blobbasefeeScalar(),
+                    ISystemConfig.L1FeeScalars({
+                        basefeeScalar: cfg.basefeeScalar(),
+                        blobbasefeeScalar: cfg.blobbasefeeScalar()
+                    }),
                     batcherHash,
                     uint64(cfg.l2GenesisBlockGasLimit()),
                     cfg.p2pSequencerAddress(),
@@ -1099,7 +1101,10 @@ contract Deploy is Deployer {
                         optimismMintableERC20Factory: mustGetAddress("OptimismMintableERC20FactoryProxy"),
                         gasPayingToken: customGasTokenAddress
                     }),
-                    uint128(cfg.eip1559Denominator()) //YUWENTODO pack this
+                    ISystemConfig.EIP1559Params({
+                        denominator: uint64(cfg.eip1559Denominator()),
+                        elasticity: uint64(cfg.eip1559Elasticity())
+                    })
                 )
             )
         });

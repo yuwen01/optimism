@@ -114,8 +114,10 @@ contract SystemConfigInterop_Test is CommonTest {
 
         systemConfig.initialize({
             _owner: alice,
-            _basefeeScalar: 2100,
-            _blobbasefeeScalar: 1000000,
+            _l1FeeScalars: ISystemConfig.L1FeeScalars({
+                basefeeScalar: 2100,
+                blobbasefeeScalar: 1000000
+            }),
             _batcherHash: bytes32(hex"abcd"),
             _gasLimit: 30_000_000,
             _unsafeBlockSigner: address(1),
@@ -130,7 +132,10 @@ contract SystemConfigInterop_Test is CommonTest {
                 optimismMintableERC20Factory: address(0),
                 gasPayingToken: _token
             }),
-            _eip1559Params: 250 //YUWENTODO pack this
+            _eip1559Params: ISystemConfig.EIP1559Params({
+                denominator: 100,
+                elasticity: 2
+            })
         });
     }
 
