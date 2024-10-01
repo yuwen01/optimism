@@ -24,8 +24,6 @@ contract SystemConfig_GasLimitBoundaries_Invariant is Test {
                     2100, // overhead
                     1000000, // scalar
                     bytes32(hex"abcd"), // batcher hash
-                    250, // eip1559 denominator
-                    2, // eip1559 elasticity
                     30_000_000, // gas limit
                     address(1), // unsafe block signer
                     Constants.DEFAULT_RESOURCE_CONFIG(),
@@ -38,7 +36,8 @@ contract SystemConfig_GasLimitBoundaries_Invariant is Test {
                         optimismPortal: address(0),
                         optimismMintableERC20Factory: address(0),
                         gasPayingToken: Constants.ETHER
-                    })
+                    }),
+                    250 // eip1559 params YUWENTODO pack this
                 )
             )
         );

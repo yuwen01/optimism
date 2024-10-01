@@ -133,8 +133,6 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
             _basefeeScalar: basefeeScalar,
             _blobbasefeeScalar: blobbasefeeScalar,
             _batcherHash: bytes32(hex"abcd"),
-            _eip1559Denominator: 1,
-            _eip1559Elasticity: 1,
             _gasLimit: minimumGasLimit - 1,
             _unsafeBlockSigner: address(1),
             _config: Constants.DEFAULT_RESOURCE_CONFIG(),
@@ -147,7 +145,8 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
                 optimismPortal: address(0),
                 optimismMintableERC20Factory: address(0),
                 gasPayingToken: Constants.ETHER
-            })
+            }),
+            _eip1559Params: 1
         });
     }
 
@@ -165,8 +164,6 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
             _basefeeScalar: basefeeScalar,
             _blobbasefeeScalar: blobbasefeeScalar,
             _batcherHash: bytes32(hex"abcd"),
-            _eip1559Denominator: 1,
-            _eip1559Elasticity: 1,
             _gasLimit: gasLimit,
             _unsafeBlockSigner: address(1),
             _config: Constants.DEFAULT_RESOURCE_CONFIG(),
@@ -179,7 +176,8 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
                 optimismPortal: address(0),
                 optimismMintableERC20Factory: address(0),
                 gasPayingToken: Constants.ETHER
-            })
+            }),
+            _eip1559Params: 1
         });
         assertEq(systemConfig.startBlock(), block.number);
     }
@@ -198,8 +196,6 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
             _basefeeScalar: basefeeScalar,
             _blobbasefeeScalar: blobbasefeeScalar,
             _batcherHash: bytes32(hex"abcd"),
-            _eip1559Denominator: 1,
-            _eip1559Elasticity: 1,
             _gasLimit: gasLimit,
             _unsafeBlockSigner: address(1),
             _config: Constants.DEFAULT_RESOURCE_CONFIG(),
@@ -212,7 +208,8 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
                 optimismPortal: address(0),
                 optimismMintableERC20Factory: address(0),
                 gasPayingToken: Constants.ETHER
-            })
+            }),
+            _eip1559Params: 1
         });
         assertEq(systemConfig.startBlock(), 1);
     }
@@ -295,8 +292,6 @@ contract SystemConfig_Init_ResourceConfig is SystemConfig_Init {
             _basefeeScalar: 0,
             _blobbasefeeScalar: 0,
             _batcherHash: bytes32(0),
-            _eip1559Denominator: 1,
-            _eip1559Elasticity: 1,
             _gasLimit: gasLimit,
             _unsafeBlockSigner: address(0),
             _config: config,
@@ -309,7 +304,8 @@ contract SystemConfig_Init_ResourceConfig is SystemConfig_Init {
                 optimismPortal: address(0),
                 optimismMintableERC20Factory: address(0),
                 gasPayingToken: address(0)
-            })
+            }),
+            _eip1559Params: 1
         });
     }
 }
@@ -335,8 +331,6 @@ contract SystemConfig_Init_CustomGasToken is SystemConfig_Init {
             _basefeeScalar: 2100,
             _blobbasefeeScalar: 1000000,
             _batcherHash: bytes32(hex"abcd"),
-            _eip1559Denominator: 250,
-            _eip1559Elasticity: 2,
             _gasLimit: 30_000_000,
             _unsafeBlockSigner: address(1),
             _config: Constants.DEFAULT_RESOURCE_CONFIG(),
@@ -349,7 +343,8 @@ contract SystemConfig_Init_CustomGasToken is SystemConfig_Init {
                 optimismPortal: address(optimismPortal),
                 optimismMintableERC20Factory: address(0),
                 gasPayingToken: _gasPayingToken
-            })
+            }),
+            _eip1559Params: 250
         });
     }
 

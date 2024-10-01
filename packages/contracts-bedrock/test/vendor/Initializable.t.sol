@@ -182,8 +182,6 @@ contract Initializer_Test is Bridge_Initializer {
                         0,
                         bytes32(0),
                         1,
-                        1,
-                        1,
                         address(0),
                         IResourceMetering.ResourceConfig({
                             maxResourceLimit: 1,
@@ -202,7 +200,8 @@ contract Initializer_Test is Bridge_Initializer {
                             optimismPortal: address(0),
                             optimismMintableERC20Factory: address(0),
                             gasPayingToken: Constants.ETHER
-                        })
+                        }),
+                        1
                     )
                 )
             })
@@ -220,8 +219,6 @@ contract Initializer_Test is Bridge_Initializer {
                         0,
                         bytes32(0),
                         1,
-                        1,
-                        1,
                         address(0),
                         IResourceMetering.ResourceConfig({
                             maxResourceLimit: 1,
@@ -240,7 +237,8 @@ contract Initializer_Test is Bridge_Initializer {
                             optimismPortal: address(0),
                             optimismMintableERC20Factory: address(0),
                             gasPayingToken: Constants.ETHER
-                        })
+                        }),
+                        1
                     )
                 )
             })

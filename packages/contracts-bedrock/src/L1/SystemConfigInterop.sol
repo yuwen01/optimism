@@ -44,8 +44,7 @@ contract SystemConfigInterop is SystemConfig {
         uint32 _basefeeScalar,
         uint32 _blobbasefeeScalar,
         bytes32 _batcherHash,
-        uint64 _eip1559Denominator,
-        uint64 _eip1559Elasticity,
+        uint128 _eip1559Params,
         uint64 _gasLimit,
         address _unsafeBlockSigner,
         IResourceMetering.ResourceConfig memory _config,
@@ -61,13 +60,12 @@ contract SystemConfigInterop is SystemConfig {
             _basefeeScalar: _basefeeScalar,
             _blobbasefeeScalar: _blobbasefeeScalar,
             _batcherHash: _batcherHash,
-            _eip1559Denominator: _eip1559Denominator,
-            _eip1559Elasticity: _eip1559Elasticity,
             _gasLimit: _gasLimit,
             _unsafeBlockSigner: _unsafeBlockSigner,
             _config: _config,
             _batchInbox: _batchInbox,
-            _addresses: _addresses
+            _addresses: _addresses,
+            _eip1559Params: _eip1559Params
         });
         Storage.setAddress(DEPENDENCY_MANAGER_SLOT, _dependencyManager);
     }

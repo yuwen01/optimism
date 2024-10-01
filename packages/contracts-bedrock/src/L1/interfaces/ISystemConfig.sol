@@ -23,6 +23,16 @@ interface ISystemConfig {
         address gasPayingToken;
     }
 
+    struct EIP1559Params {
+        uint64 denominator;
+        uint64 elasticity;
+    }
+
+    struct L1FeeScalars {
+        uint32 basefeeScalar;
+        uint32 blobbasefeeScalar;
+    }
+
     event ConfigUpdate(uint256 indexed version, UpdateType indexed updateType, bytes data);
     event Initialized(uint8 version);
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -50,16 +60,14 @@ interface ISystemConfig {
     function gasPayingTokenSymbol() external view returns (string memory symbol_);
     function initialize(
         address _owner,
-        uint32 _basefeeScalar,
-        uint32 _blobbasefeeScalar,
+        L1FeeScalars _scalars,
         bytes32 _batcherHash,
-        uint64 _eip1559Denominator,
-        uint64 _eip1559Elasticity,
         uint64 _gasLimit,
         address _unsafeBlockSigner,
         IResourceMetering.ResourceConfig memory _config,
         address _batchInbox,
-        Addresses memory _addresses
+        Addresses memory _addresses,
+        EIP1559Params memory _eip1559Params
     )
         external;
     function isCustomGasToken() external view returns (bool);
