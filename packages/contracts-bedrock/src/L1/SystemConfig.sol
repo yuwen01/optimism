@@ -126,11 +126,8 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
     /// @notice L2 block gas limit.
     uint64 public gasLimit;
 
-    /// @notice Basefee scalar value. Part of the L2 fee calculation since the Ecotone network upgrade.
-    uint32 public basefeeScalar;
-
-    /// @notice Blobbasefee scalar value. Part of the L2 fee calculation since the Ecotone network upgrade.
-    uint32 public blobbasefeeScalar;
+    /// @notice L1 fee scalars: blobbasefeeScalar and basefeeScalar.
+    L1FeeScalars public l1FeeScalars;
 
     /// @notice Packed EIP1559 parameters.
     uint256 public eip1559Params;
@@ -187,8 +184,8 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
                 gasPayingToken: address(0)
             }),
             _eip1559Params: EIP1559Params({
-                denominator: 250,
-                elasticity: 100
+                denominator: 2,
+                elasticity: 1
             })
         });
     }
@@ -204,7 +201,7 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
     /// @param _batchInbox        Batch inbox address. An identifier for the op-node to find
     ///                           canonical data.
     /// @param _addresses         Set of L1 contract addresses. These should be the proxies.
-    /// @param _eip1559Params       Initial EIP 1559 params. YUWENTODO: how are they packed?
+    /// @param _eip1559Params       Initial EIP 1559 params.
     function initialize(
         address _owner,
         L1FeeScalars memory _l1FeeScalars,
@@ -342,6 +339,16 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
         return uint64(eip1559Params);
     }
 
+    /// @notice Getter for the basefeeScalar
+    function basefeeScalar() external view returns (uint32) {
+        return l1FeeScalars.basefeeScalar;
+    }
+
+    /// @notice Getter for the blobbasefeeScalar
+    function blobbasefeeScalar() external view returns (uint32) {
+        return l1FeeScalars.blobbasefeeScalar;
+    }
+
     /// @notice Internal setter for the gas paying token address, includes validation.
     ///         The token must not already be set and must be non zero and not the ether address
     ///         to set the token address. This prevents the token address from being changed
@@ -428,8 +435,8 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
     /// @param _basefeeScalar     New basefeeScalar value.
     /// @param _blobbasefeeScalar New blobbasefeeScalar value.
     function _setGasConfigEcotone(uint32 _basefeeScalar, uint32 _blobbasefeeScalar) internal {
-        basefeeScalar = _basefeeScalar;
-        blobbasefeeScalar = _blobbasefeeScalar;
+        l1FeeScalars.basefeeScalar = _basefeeScalar;
+        l1FeeScalars.blobbasefeeScalar = _blobbasefeeScalar;
 
         scalar = (uint256(0x01) << 248) | (uint256(_blobbasefeeScalar) << 32) | _basefeeScalar;
 
@@ -437,16 +444,16 @@ contract SystemConfig is OwnableUpgradeable, ISemver, IGasToken {
         emit ConfigUpdate(VERSION, UpdateType.GAS_CONFIG, data);
     }
 
-    // / @notice Updates EIP 1559 Params as of the Holocene upgrade. Can only be called by the owner.
-    // / @param _denominator     New EIP 1559 denominator value.
-    // / @param _elasticity    New EIP 1559 elasticity value. YUWENTODO fix this
+    /// @notice Updates EIP 1559 Params as of the Holocene upgrade. Can only be called by the owner.
+    /// @param _denominator     New EIP 1559 denominator value.
+    /// @param _elasticity    New EIP 1559 elasticity value.
     function setEip1559Params(uint64 _denominator, uint64 _elasticity) external onlyOwner {
         _setEip1559Params(_denominator, _elasticity);
     }
 
-    // / @notice Internal function for updating the EIP 1559 Params as of the Holocene upgrade.
-    // / @param _denominator     New EIP 1559 denominator value.
-    // / @param _elasticity    New EIP 1559 elasticity value. YUWENTODO fix this
+    /// @notice Internal function for updating the EIP 1559 Params as of the Holocene upgrade.
+    /// @param _denominator     New EIP 1559 denominator value.
+    /// @param _elasticity    New EIP 1559 elasticity value.
     function _setEip1559Params(uint64 _denominator, uint64 _elasticity) internal {
         eip1559Params = (uint256(_denominator) << 64) | _elasticity;
         bytes memory data = abi.encode(eip1559Params);

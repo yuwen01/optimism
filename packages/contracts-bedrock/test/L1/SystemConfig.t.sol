@@ -32,6 +32,8 @@ contract SystemConfig_Initialize_Test is SystemConfig_Init {
     address optimismMintableERC20Factory;
     uint32 basefeeScalar;
     uint32 blobbasefeeScalar;
+    uint64 eip1559Denominator;
+    uint64 eip1559Elasticity;
 
     function setUp() public virtual override {
         super.setUp();
@@ -44,6 +46,8 @@ contract SystemConfig_Initialize_Test is SystemConfig_Init {
         unsafeBlockSigner = deploy.cfg().p2pSequencerAddress();
         systemConfigImpl = deploy.mustGetAddress("SystemConfig");
         optimismMintableERC20Factory = deploy.mustGetAddress("OptimismMintableERC20FactoryProxy");
+        eip1559Denominator = uint64(deploy.cfg().eip1559Denominator());
+        eip1559Elasticity = uint64(deploy.cfg().eip1559Elasticity());
     }
 
     /// @dev Tests that constructor sets the correct values.
@@ -57,6 +61,8 @@ contract SystemConfig_Initialize_Test is SystemConfig_Init {
         assertEq(impl.unsafeBlockSigner(), address(0));
         assertEq(impl.basefeeScalar(), 0);
         assertEq(impl.blobbasefeeScalar(), 0);
+        assertEq(impl.eip1559Denominator(), 2);
+        assertEq(impl.eip1559Elasticity(), 1);
         IResourceMetering.ResourceConfig memory actual = impl.resourceConfig();
         assertEq(actual.maxResourceLimit, 1);
         assertEq(actual.elasticityMultiplier, 1);
@@ -89,6 +95,8 @@ contract SystemConfig_Initialize_Test is SystemConfig_Init {
         assertEq(systemConfig.unsafeBlockSigner(), unsafeBlockSigner);
         assertEq(systemConfig.basefeeScalar(), basefeeScalar);
         assertEq(systemConfig.blobbasefeeScalar(), blobbasefeeScalar);
+        assertEq(systemConfig.eip1559Denominator(), eip1559Denominator);
+        assertEq(systemConfig.eip1559Elasticity(), eip1559Elasticity);
         // Depends on `initialize` being called with defaults
         IResourceMetering.ResourceConfig memory rcfg = Constants.DEFAULT_RESOURCE_CONFIG();
         IResourceMetering.ResourceConfig memory actual = systemConfig.resourceConfig();
@@ -149,8 +157,8 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
                 gasPayingToken: Constants.ETHER
             }),
             _eip1559Params: ISystemConfig.EIP1559Params({
-                denominator: 250,
-                elasticity: 100
+                denominator: eip1559Denominator,
+                elasticity: eip1559Elasticity
             })
         });
     }
@@ -167,8 +175,8 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
         systemConfig.initialize({
             _owner: alice,
             _l1FeeScalars: ISystemConfig.L1FeeScalars({
-                basefeeScalar: 2100,
-                blobbasefeeScalar: 1000000
+                basefeeScalar: basefeeScalar,
+                blobbasefeeScalar: blobbasefeeScalar
             }),
             _batcherHash: bytes32(hex"abcd"),
             _gasLimit: gasLimit,
@@ -185,8 +193,8 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
                 gasPayingToken: Constants.ETHER
             }),
             _eip1559Params: ISystemConfig.EIP1559Params({
-                denominator: 250,
-                elasticity: 100
+                denominator: eip1559Denominator,
+                elasticity: eip1559Elasticity
             })
         });
         assertEq(systemConfig.startBlock(), block.number);
@@ -204,8 +212,8 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
         systemConfig.initialize({
             _owner: alice,
             _l1FeeScalars: ISystemConfig.L1FeeScalars({
-                basefeeScalar: 2100,
-                blobbasefeeScalar: 1000000
+                basefeeScalar: basefeeScalar,
+                blobbasefeeScalar: blobbasefeeScalar
             }),
             _batcherHash: bytes32(hex"abcd"),
             _gasLimit: gasLimit,
@@ -222,8 +230,8 @@ contract SystemConfig_Initialize_TestFail is SystemConfig_Initialize_Test {
                 gasPayingToken: Constants.ETHER
             }),
             _eip1559Params: ISystemConfig.EIP1559Params({
-                denominator: 250,
-                elasticity: 100
+                denominator: eip1559Denominator,
+                elasticity: eip1559Elasticity
             })
         });
         assertEq(systemConfig.startBlock(), 1);
@@ -323,8 +331,8 @@ contract SystemConfig_Init_ResourceConfig is SystemConfig_Init {
                 gasPayingToken: address(0)
             }),
             _eip1559Params: ISystemConfig.EIP1559Params({
-                denominator: 250,
-                elasticity: 100
+                denominator: config.baseFeeMaxChangeDenominator,
+                elasticity: config.elasticityMultiplier
             })
         });
     }
@@ -367,8 +375,8 @@ contract SystemConfig_Init_CustomGasToken is SystemConfig_Init {
                 gasPayingToken: _gasPayingToken
             }),
             _eip1559Params: ISystemConfig.EIP1559Params({
-                denominator: 250,
-                elasticity: 100
+                denominator: 8,
+                elasticity: 2
             })
         });
     }

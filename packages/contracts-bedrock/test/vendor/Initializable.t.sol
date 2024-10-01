@@ -204,8 +204,8 @@ contract Initializer_Test is Bridge_Initializer {
                             gasPayingToken: Constants.ETHER
                         }),
                         ISystemConfig.EIP1559Params({
-                            denominator: 250,
-                            elasticity: 100
+                            denominator: 8,
+                            elasticity: 2
                         })
                     )
                 )

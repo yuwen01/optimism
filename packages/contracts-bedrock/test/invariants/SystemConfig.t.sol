@@ -40,8 +40,8 @@ contract SystemConfig_GasLimitBoundaries_Invariant is Test {
                         gasPayingToken: Constants.ETHER
                     }),
                     ISystemConfig.EIP1559Params({ // eip1559 params
-                        denominator: 250,
-                        elasticity: 250
+                        denominator: 8,
+                        elasticity: 2
                     })
                 )
             )

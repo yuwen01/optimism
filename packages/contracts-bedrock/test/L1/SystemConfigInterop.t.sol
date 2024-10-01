@@ -133,7 +133,7 @@ contract SystemConfigInterop_Test is CommonTest {
                 gasPayingToken: _token
             }),
             _eip1559Params: ISystemConfig.EIP1559Params({
-                denominator: 100,
+                denominator: 8,
                 elasticity: 2
             })
         });

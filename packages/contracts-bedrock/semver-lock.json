@@ -84,8 +84,8 @@
     "sourceCodeHash": "0x04d25cbf0c4ea5025b0dd3f79f0a32f6623ddb869cff35649072ab3ad964b310"
   },
   "src/L2/L1BlockInterop.sol": {
-    "initCodeHash": "0xfcba7dcac2fb0a7296b6ab16c1af98a107e472fc0290feeb999d72b2473909d0",
-    "sourceCodeHash": "0x7417677643e1df1ae1782513b94c7821097b9529d3f8626c3bcb8b3a9ae0d180"
+    "initCodeHash": "0x7f87e0b8be9801cb242c469ec7999eb80221f65063aedd4ca4923a5e0fb0e5a7",
+    "sourceCodeHash": "0x722071a9d08dcbeda9cdaadeb2dd679a8bc192563e4a0439f4cd74439fa75581"
   },
   "src/L2/L1FeeVault.sol": {
     "initCodeHash": "0x3bfcd57e25ad54b66c374f63e24e33a6cf107044aa8f5f69ef21202c380b5c5b",
