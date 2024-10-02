@@ -18,6 +18,7 @@ import { SetPreinstalls } from "scripts/SetPreinstalls.s.sol";
 import { SequencerFeeVault } from "src/L2/SequencerFeeVault.sol";
 import { BaseFeeVault } from "src/L2/BaseFeeVault.sol";
 import { L1FeeVault } from "src/L2/L1FeeVault.sol";
+import { OperatorFeeVault } from "src/L2/OperatorFeeVault.sol";
 import { OptimismSuperchainERC20Beacon } from "src/L2/OptimismSuperchainERC20Beacon.sol";
 import { OptimismMintableERC721Factory } from "src/universal/OptimismMintableERC721Factory.sol";
 import { FeeVault } from "src/universal/FeeVault.sol";
@@ -270,7 +271,8 @@ contract L2Genesis is Deployer {
         setProxyAdmin(); // 18
         setBaseFeeVault(); // 19
         setL1FeeVault(); // 1A
-        // 1B,1C,1D,1E,1F: not used.
+        setOperatorFeeVault(); // 1B
+        // 1C,1D,1E,1F: not used.
         setSchemaRegistry(); // 20
         setEAS(); // 21
         setGovernanceToken(); // 42: OP (not behind a proxy)
@@ -450,6 +452,23 @@ contract L2Genesis is Deployer {
 
         address impl = Predeploys.predeployToCodeNamespace(Predeploys.L1_FEE_VAULT);
         console.log("Setting %s implementation at: %s", "L1FeeVault", impl);
+        vm.etch(impl, address(vault).code);
+
+        /// Reset so its not included state dump
+        vm.etch(address(vault), "");
+        vm.resetNonce(address(vault));
+    }
+
+    /// @notice This predeploy is following the safety invariant #2.
+    function setOperatorFeeVault() public {
+        OperatorFeeVault vault = new OperatorFeeVault({
+            _recipient: cfg.operatorFeeVaultRecipient(),
+            _minWithdrawalAmount: cfg.operatorFeeVaultMinimumWithdrawalAmount(),
+            _withdrawalNetwork: FeeVault.WithdrawalNetwork(cfg.operatorFeeVaultWithdrawalNetwork())
+        });
+
+        address impl = Predeploys.predeployToCodeNamespace(Predeploys.OPERATOR_FEE_VAULT);
+        console.log("Setting %s implementation at: %s", "OperatorFeeVault", impl);
         vm.etch(impl, address(vault).code);
 
         /// Reset so its not included state dump

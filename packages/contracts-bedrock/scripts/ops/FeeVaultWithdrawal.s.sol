@@ -22,10 +22,11 @@ contract FeeVaultWithdrawal is Script {
     function run() external {
         require(address(multicall).code.length > 0);
 
-        address[] memory vaults = new address[](3);
+        address[] memory vaults = new address[](4);
         vaults[0] = Predeploys.SEQUENCER_FEE_WALLET;
         vaults[1] = Predeploys.BASE_FEE_VAULT;
         vaults[2] = Predeploys.L1_FEE_VAULT;
+        vaults[3] = Predeploys.OPERATOR_FEE_VAULT;
 
         for (uint256 i; i < vaults.length; i++) {
             address vault = vaults[i];
