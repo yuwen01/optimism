@@ -218,9 +218,9 @@ func TestParseL1InfoDepositTxData(t *testing.T) {
 		require.NoError(t, err)
 		require.False(t, depTx.IsSystemTransaction)
 		require.Equal(t, depTx.Gas, uint64(RegolithSystemTxGas))
-		// Interop activates, but holocene L1 info is still used at this upgrade block
-		require.Equal(t, L1InfoEcotoneLen, len(depTx.Data))
-		require.Equal(t, L1InfoFuncEcotoneBytes4, depTx.Data[:4])
+		// Interop activates, but isthmus L1 info is still used at this upgrade block
+		require.Equal(t, L1InfoIsthmusLen, len(depTx.Data))
+		require.Equal(t, L1InfoFuncIsthmusBytes4, depTx.Data[:4])
 	})
 	t.Run("genesis-block interop", func(t *testing.T) {
 		rng := rand.New(rand.NewSource(1234))
