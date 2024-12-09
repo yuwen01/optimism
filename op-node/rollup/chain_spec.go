@@ -40,6 +40,7 @@ const (
 	Fjord    ForkName = "fjord"
 	Granite  ForkName = "granite"
 	Holocene ForkName = "holocene"
+	Isthmus  ForkName = "isthmus"
 	Interop  ForkName = "interop"
 	None     ForkName = "none"
 )
@@ -52,7 +53,8 @@ var nextFork = map[ForkName]ForkName{
 	Ecotone:  Fjord,
 	Fjord:    Granite,
 	Granite:  Holocene,
-	Holocene: Interop,
+	Holocene: Isthmus,
+	Isthmus:  Interop,
 	Interop:  None,
 }
 

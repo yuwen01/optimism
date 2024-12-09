@@ -20,6 +20,8 @@ interface IL1Block {
     function l1FeeOverhead() external view returns (uint256);
     function l1FeeScalar() external view returns (uint256);
     function number() external view returns (uint64);
+    function operatorFeeScalar() external view returns (uint32);
+    function operatorFeeConstant() external view returns (uint64);
     function sequenceNumber() external view returns (uint64);
     function setGasPayingToken(address _token, uint8 _decimals, bytes32 _name, bytes32 _symbol) external;
     function setL1BlockValues(

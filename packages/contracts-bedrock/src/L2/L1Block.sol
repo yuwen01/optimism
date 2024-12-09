@@ -57,6 +57,12 @@ contract L1Block is ISemver, IGasToken {
     /// @notice The latest L1 blob base fee.
     uint256 public blobBaseFee;
 
+    /// @notice The scalar value applied to the operator fee.
+    uint32 public operatorFeeScalar;
+
+    /// @notice The constant value applied to the operator fee.
+    uint64 public operatorFeeConstant;
+
     /// @custom:semver 1.5.1-beta.2
     function version() public pure virtual returns (string memory) {
         return "1.5.1-beta.2";

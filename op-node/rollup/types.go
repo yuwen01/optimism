@@ -118,6 +118,10 @@ type Config struct {
 	// Active if HoloceneTime != nil && L2 block timestamp >= *HoloceneTime, inactive otherwise.
 	HoloceneTime *uint64 `json:"holocene_time,omitempty"`
 
+	// IsthmusTime sets the activation time of the Isthmus network upgrade.
+	// Active if IsthmusTime != nil && L2 block timestamp >= *IsthmusTime, inactive otherwise.
+	IsthmusTime *uint64 `json:"isthmus_time,omitempty"`
+
 	// InteropTime sets the activation time for an experimental feature-set, activated like a hardfork.
 	// Active if InteropTime != nil && L2 block timestamp >= *InteropTime, inactive otherwise.
 	InteropTime *uint64 `json:"interop_time,omitempty"`
@@ -402,6 +406,11 @@ func (c *Config) IsHolocene(timestamp uint64) bool {
 	return c.HoloceneTime != nil && timestamp >= *c.HoloceneTime
 }
 
+// IsIsthmus returns true if the Isthmus hardfork is active at or past the given timestamp.
+func (c *Config) IsIsthmus(timestamp uint64) bool {
+	return c.IsthmusTime != nil && timestamp >= *c.IsthmusTime
+}
+
 // IsInterop returns true if the Interop hardfork is active at or past the given timestamp.
 func (c *Config) IsInterop(timestamp uint64) bool {
 	return c.InteropTime != nil && timestamp >= *c.InteropTime
@@ -455,6 +464,14 @@ func (c *Config) IsHoloceneActivationBlock(l2BlockTime uint64) bool {
 	return c.IsHolocene(l2BlockTime) &&
 		l2BlockTime >= c.BlockTime &&
 		!c.IsHolocene(l2BlockTime-c.BlockTime)
+}
+
+// IsIsthmusActivationBlock returns whether the specified block is the first block subject to the
+// Isthmus upgrade.
+func (c *Config) IsIsthmusActivationBlock(l2BlockTime uint64) bool {
+	return c.IsIsthmus(l2BlockTime) &&
+		l2BlockTime >= c.BlockTime &&
+		!c.IsIsthmus(l2BlockTime-c.BlockTime)
 }
 
 func (c *Config) IsInteropActivationBlock(l2BlockTime uint64) bool {
