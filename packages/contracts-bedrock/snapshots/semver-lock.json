@@ -16,12 +16,12 @@
     "sourceCodeHash": "0xf9ba98657dc235355146e381b654fe3ed766feb7cd87636ec0c9d4c6dd3e1973"
   },
   "src/L1/OPContractsManager.sol": {
-    "initCodeHash": "0x997aa1eb8c9323ece8942344d0d27bac71f6a4f4ccf7dac7b9ab7232f90bed93",
-    "sourceCodeHash": "0xc9214c3ac97f51d3e3435500a987346518eaa04cf2cb672827d295b8bd226a61"
+    "initCodeHash": "0xd1bb5efb283cf23b966de1af698aa5d062905542bd1f9f17074cdac8599c2cb9",
+    "sourceCodeHash": "0xe50c3d6ae2664000f942083d584fbbd28f1c622edfbdaaf2e7f31b344ca4207d"
   },
   "src/L1/OPContractsManagerInterop.sol": {
-    "initCodeHash": "0xef5ec182708fa5c29cf2f42a6109d748cac653981f8a773ce1d6453aff863362",
-    "sourceCodeHash": "0xf9e820880250d9a1889d07e87f3dfc2c86397cd743f6e6ac9101e621b90f912d"
+    "initCodeHash": "0xef065cc7074e509ba0c2bf14890b4c8eb494f0b0d65a755a1b837c1e2cc39b7f",
+    "sourceCodeHash": "0x0ba9c63e3f00dab87be058fd0091f19c51faeafd24609bc13667214796bcc106"
   },
   "src/L1/OPPrestateUpdater.sol": {
     "initCodeHash": "0x4e8acd5a9fa64ca3cfd2f1bef65303dd0c48f475bda7267b6ac3570a70cceb13",
@@ -48,8 +48,8 @@
     "sourceCodeHash": "0xcb63aae344f35ea3dabf0c88a8cb9b0f3a8076e03e11cbb04e971ce08d643e4a"
   },
   "src/L1/SystemConfigInterop.sol": {
-    "initCodeHash": "0x527f85d7191573f1432e31296124ca946b79abe1918c3002034c63007b6e8d27",
-    "sourceCodeHash": "0xf35c40b7eca94f5ba182cd76a5b5f3e7d589aa0e67fbd3de2c3327a2b540104c"
+    "initCodeHash": "0x62c9c595757fb72fc578dc88366e44c6c6a7c1fad6460a3f246154a96bd1e5a6",
+    "sourceCodeHash": "0x609a10f2f85a2b1cc60a5accd795f65c84edc09b0e98124011bd9e7caeb905d9"
   },
   "src/L2/BaseFeeVault.sol": {
     "initCodeHash": "0xc403d4c555d8e69a2699e01d192ae7327136701fa02da10a6d75a584b3c364c9",
@@ -176,11 +176,11 @@
     "sourceCodeHash": "0x08efbce44394f555a4e656816897029e2e80e455e4200a1b887fc18993294660"
   },
   "src/dispute/FaultDisputeGame.sol": {
-    "initCodeHash": "0xb7493f4eac423a07e9a9e318f25d003c74ece97da1fab5d4e47a7d5497d6db2f",
+    "initCodeHash": "0xcf52f355fb87ea97d077e74e7c2288bf6aab6ff00c62ccbacc3acb1c1066d2b6",
     "sourceCodeHash": "0x30ae8a7e5718b9c8b0536034143f8f93f01d6f8b53f287fe4d020eb1d7053ef9"
   },
   "src/dispute/PermissionedDisputeGame.sol": {
-    "initCodeHash": "0x77f51a5cc73ee6e3a1b2f8d406daccd0d4e0fb20751532e9a48f398183c99f94",
+    "initCodeHash": "0xbd05415cb0b4fc4a95d49af37b50163933b6e535233f34942fbfd27991e7374e",
     "sourceCodeHash": "0x73b6788068565814ac516055269910e0c44273edd17978f421d05ba8431ef60b"
   },
   "src/legacy/DeployerWhitelist.sol": {
