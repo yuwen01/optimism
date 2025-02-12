@@ -16,15 +16,15 @@
     "sourceCodeHash": "0xf9ba98657dc235355146e381b654fe3ed766feb7cd87636ec0c9d4c6dd3e1973"
   },
   "src/L1/OPContractsManager.sol": {
-    "initCodeHash": "0xa275d90de387b7462291c7c90d9ef3fb78282356ceb60c2548813ae4291c5323",
-    "sourceCodeHash": "0xe5a5e6905d01dc2b3ff8069b23313bd734c0e44bd0d47b44516bf48f90476d60"
+    "initCodeHash": "0xbb6c9b43adb46de179fe9c8d7a63ddb76ea65a32b46c555eb6622a37aa724f08",
+    "sourceCodeHash": "0xc9214c3ac97f51d3e3435500a987346518eaa04cf2cb672827d295b8bd226a61"
   },
   "src/L1/OPContractsManagerInterop.sol": {
-    "initCodeHash": "0x339c7ce16cb35a5918b344ce596c9448074ace532f56a58637a3e7e047091721",
-    "sourceCodeHash": "0xa5f8b31a02896d2e8ba6c5b64a8a7c1d78bd95af998184cdd11d66760fdedabd"
+    "initCodeHash": "0xb750f5f96b558d3d39c4c10dfacd737ea422cc395b00f8fd06e25d33d061298b",
+    "sourceCodeHash": "0xf9e820880250d9a1889d07e87f3dfc2c86397cd743f6e6ac9101e621b90f912d"
   },
   "src/L1/OPPrestateUpdater.sol": {
-    "initCodeHash": "0x4e8acd5a9fa64ca3cfd2f1bef65303dd0c48f475bda7267b6ac3570a70cceb13",
+    "initCodeHash": "0x476bccfc59afa362b0aea4857fe674acb472a867291d302959b704bb480681ae",
     "sourceCodeHash": "0xc5dfed0f99ddedb85e12fdb48fa7cf9fb6f37bc0ef5c10288cc7e12bee726cf5"
   },
   "src/L1/OptimismPortal2.sol": {
@@ -48,8 +48,8 @@
     "sourceCodeHash": "0xcb63aae344f35ea3dabf0c88a8cb9b0f3a8076e03e11cbb04e971ce08d643e4a"
   },
   "src/L1/SystemConfigInterop.sol": {
-    "initCodeHash": "0x6812baa470ebd89ff0e356379acea4eb04ff6891a241f6a8b2b859768622c716",
-    "sourceCodeHash": "0x5488545d11a82d0c7a9206dd415220dbc4a25d14f94abcd2fe8a16bf29977ac3"
+    "initCodeHash": "0x62c9c595757fb72fc578dc88366e44c6c6a7c1fad6460a3f246154a96bd1e5a6",
+    "sourceCodeHash": "0x609a10f2f85a2b1cc60a5accd795f65c84edc09b0e98124011bd9e7caeb905d9"
   },
   "src/L2/BaseFeeVault.sol": {
     "initCodeHash": "0xc403d4c555d8e69a2699e01d192ae7327136701fa02da10a6d75a584b3c364c9",
@@ -176,11 +176,11 @@
     "sourceCodeHash": "0x08efbce44394f555a4e656816897029e2e80e455e4200a1b887fc18993294660"
   },
   "src/dispute/FaultDisputeGame.sol": {
-    "initCodeHash": "0xb7493f4eac423a07e9a9e318f25d003c74ece97da1fab5d4e47a7d5497d6db2f",
+    "initCodeHash": "0xcf52f355fb87ea97d077e74e7c2288bf6aab6ff00c62ccbacc3acb1c1066d2b6",
     "sourceCodeHash": "0x30ae8a7e5718b9c8b0536034143f8f93f01d6f8b53f287fe4d020eb1d7053ef9"
   },
   "src/dispute/PermissionedDisputeGame.sol": {
-    "initCodeHash": "0x77f51a5cc73ee6e3a1b2f8d406daccd0d4e0fb20751532e9a48f398183c99f94",
+    "initCodeHash": "0xbd05415cb0b4fc4a95d49af37b50163933b6e535233f34942fbfd27991e7374e",
     "sourceCodeHash": "0x73b6788068565814ac516055269910e0c44273edd17978f421d05ba8431ef60b"
   },
   "src/legacy/DeployerWhitelist.sol": {

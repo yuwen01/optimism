@@ -144,9 +144,9 @@ contract OPContractsManager is ISemver {
 
     // -------- Constants and Variables --------
 
-    /// @custom:semver 1.2.3
+    /// @custom:semver 1.2.2
     function version() public pure virtual returns (string memory) {
-        return "1.2.3";
+        return "1.2.2";
     }
 
     /// @notice Address of the SuperchainConfig contract shared by all chains.
